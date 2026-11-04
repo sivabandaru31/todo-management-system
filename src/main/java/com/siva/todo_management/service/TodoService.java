@@ -1,0 +1,10 @@
+package com.siva.todo_management.service;
+
+import com.siva.todo_management.dto.TodoDto;
+
+public interface TodoService {
+
+    TodoDto addTodo(TodoDto todoDto);
+
+
+}

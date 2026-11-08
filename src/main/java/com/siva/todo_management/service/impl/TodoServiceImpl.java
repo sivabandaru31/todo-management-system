@@ -2,11 +2,15 @@ package com.siva.todo_management.service.impl;
 
 import com.siva.todo_management.dto.TodoDto;
 import com.siva.todo_management.entity.Todo;
+import com.siva.todo_management.exception.ResourceNotFound;
 import com.siva.todo_management.service.TodoService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import com.siva.todo_management.repository.TodoRepository;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -49,7 +53,16 @@ public class TodoServiceImpl  implements TodoService {
     @Override
     public TodoDto getTodo(Long id) {
 
-       Todo todo= todoRepository.findById(id).get();
+       Todo todo= todoRepository.findById(id)
+               .orElseThrow(()-> new ResourceNotFound("Todo not found with id:"+id));
         return modelMaper.map(todo,TodoDto.class);
+    }
+
+    @Override
+    public List<TodoDto>  getAllTodos(){
+      List<Todo> todos=  todoRepository.findAll();
+
+      return  todos.stream().map((todo)-> modelMaper.map(todo,TodoDto.class) )
+              .collect(Collectors.toList());
     }
 }
